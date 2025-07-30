@@ -34,7 +34,8 @@ const AddHouseForm = () => {
       "📦 Packaging payload...",
       "🚀 Uploading to FastAPI...",
       "🤖 running regression model...",
-      "✅ final Data pushed! Check the prediction tab!",
+      "📈 building graph...",
+      "✅ final Data pushed! Check the prediction tab! or graph tab",
     ];
 
     for (let i = 0; i < fakeSteps.length; i++) {
