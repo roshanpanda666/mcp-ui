@@ -28,6 +28,11 @@ const Nav = () => {
               Predicted Value
             </Link>
           </li>
+          <li>
+            <Link href="/graph" className="hover:text-cyan-400 transition duration-200">
+              Graph
+            </Link>
+          </li>
         </ul>
       </div>
     </nav>
