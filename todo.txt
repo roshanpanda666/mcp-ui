@@ -1,0 +1,3 @@
+build the nav bar
+build the graph for prediction
+build the input fields to input the historical data 
