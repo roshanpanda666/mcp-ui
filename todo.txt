@@ -1,3 +1,4 @@
-build the nav bar
-build the graph for prediction
-build the input fields to input the historical data 
+try to host the backend and frontend 
+
+
+record a video for linkedin and tweeter made my own MCP server 

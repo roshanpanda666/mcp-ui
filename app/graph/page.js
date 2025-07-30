@@ -21,7 +21,7 @@ const GraphPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("http://localhost:8000/predictions", {
+        const res = await fetch("http://localhost:8000/predictions-ten", {
           cache: "no-store", // ensures fresh data every time
         });
         const json = await res.json();
@@ -75,34 +75,73 @@ const GraphPage = () => {
         ) : data.length === 0 ? (
           <p className="text-red-400 text-lg">⚠️ No data available to show.</p>
         ) : (
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="w-full max-w-6xl h-[400px]"
-          >
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart
-                data={data}
-                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" stroke="#444" />
-                <XAxis dataKey="year" stroke="#ccc" />
-                <YAxis stroke="#ccc" />
-                <Tooltip
-                  contentStyle={{ backgroundColor: "#222", borderColor: "#333" }}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="predicted_price"
-                  stroke="#00FFAB"
-                  strokeWidth={3}
-                  activeDot={{ r: 8 }}
-                  animationDuration={1000}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </motion.div>
+          <>
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className="w-full max-w-6xl h-[400px]"
+            >
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart
+                  data={data}
+                  margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" stroke="#444" />
+                  <XAxis dataKey="year" stroke="#ccc" />
+                  <YAxis stroke="#ccc" />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: "#222",
+                      borderColor: "#333",
+                    }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="predicted_price"
+                    stroke="#00FFAB"
+                    strokeWidth={3}
+                    activeDot={{ r: 8 }}
+                    animationDuration={1000}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </motion.div>
+
+            {/* 🌐 Raw Data Display */}
+            <div className="mt-12 w-full max-w-4xl">
+              <h2 className="text-xl font-semibold text-purple-400 mb-4 text-center">
+                🧾 Latest Prediction Data
+              </h2>
+              <div className="overflow-x-auto bg-[#111] rounded-lg shadow-md p-4 border border-gray-700">
+                <table className="min-w-full table-auto text-sm">
+                  <thead>
+                    <tr className="text-left border-b border-gray-600">
+                      <th className="px-4 py-2 text-gray-400">Year</th>
+                      <th className="px-4 py-2 text-gray-400">Predicted Price</th>
+                      <th className="px-4 py-2 text-gray-400">House No</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data.map((item, idx) => (
+                      <tr
+                        key={idx}
+                        className="border-b border-gray-700 hover:bg-[#1a1a1a]"
+                      >
+                        <td className="px-4 py-2 text-white">{item.year}</td>
+                        <td className="px-4 py-2 text-green-300">
+                          ₹{item.predicted_price?.toLocaleString("en-IN")}
+                        </td>
+                        <td className="px-4 py-2 text-blue-300">
+                          {item.house_no || "N/A"}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </>
         )}
       </main>
     </>
