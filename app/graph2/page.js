@@ -17,11 +17,28 @@ const GraphPage = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [houseNo, setHouseNo] = useState(null); // 🌟 house_no state
+  const [test, setTest] = useState([]) 
+
+  const groupByHouseNo = (data) => {
+    const grouped = {};
+  
+    data.forEach(item => {
+      const houseNo = item.house_no;
+      if (!grouped[houseNo]) {
+        grouped[houseNo] = [];
+      }
+      grouped[houseNo].push(item);
+    });
+  
+    // 🧱 Convert the grouped object into an array of arrays
+    return Object.values(grouped);
+  };
+  
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("http://localhost:8000/predictions-ten", {
+        const res = await fetch("http://localhost:8000/predictions", {
           cache: "no-store", // ensures fresh data every time
         });
         const json = await res.json();
@@ -37,10 +54,12 @@ const GraphPage = () => {
 
         if (predictions.length > 0) {
           const sorted = [...predictions].sort((a, b) => a.year - b.year);
-          const lastTen = sorted.slice(-10); // 🚀 Get only the latest 10 entries
-          setData(lastTen);
+          const grouped = groupByHouseNo(sorted)
+          setTest(grouped)
+          setData(sorted);
           setHouseNo(lastTen[lastTen.length - 1].house_no || "N/A"); // 🏠 capture house_no
         } else {
+            
           console.error("⚠️ Graph data is empty or invalid format:", json);
         }
       } catch (err) {
@@ -53,9 +72,13 @@ const GraphPage = () => {
     fetchData();
   }, []);
 
+
+
+
   return (
     <>
       <Nav />
+      {console.log(test)}
       <main className="min-h-screen bg-gradient-to-br from-black via-[#0a0a0a] to-black px-6 md:px-16 py-10 text-white font-mono flex flex-col items-center">
         <section className="mb-12 text-center">
           <h1 className="text-3xl font-bold mt-9 text-blue-400">
@@ -83,28 +106,30 @@ const GraphPage = () => {
               className="w-full max-w-6xl h-[400px]"
             >
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart
-                  data={data}
-                  margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#444" />
-                  <XAxis dataKey="year" stroke="#ccc" />
-                  <YAxis stroke="#ccc" />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: "#222",
-                      borderColor: "#333",
-                    }}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="predicted_price"
-                    stroke="#00FFAB"
-                    strokeWidth={3}
-                    activeDot={{ r: 8 }}
-                    animationDuration={1000}
-                  />
-                </LineChart>
+                {data.forEach(element => {
+                                  <LineChart
+                                  data={element}
+                                  margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                                >
+                                  <CartesianGrid strokeDasharray="3 3" stroke="#444" />
+                                  <XAxis dataKey="year" stroke="#ccc" />
+                                  <YAxis stroke="#ccc" />
+                                  <Tooltip
+                                    contentStyle={{
+                                      backgroundColor: "#222",
+                                      borderColor: "#333",
+                                    }}
+                                  />
+                                  <Line
+                                    type="monotone"
+                                    dataKey="predicted_price"
+                                    stroke="#00FFAB"
+                                    strokeWidth={3}
+                                    activeDot={{ r: 8 }}
+                                    animationDuration={1000}
+                                  />
+                                </LineChart>
+                })}
               </ResponsiveContainer>
             </motion.div>
 

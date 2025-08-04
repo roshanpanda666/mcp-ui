@@ -33,6 +33,11 @@ const Nav = () => {
               Graph
             </Link>
           </li>
+          <li>
+            <Link href="/graph2" className="hover:text-cyan-400 transition duration-200">
+              Graph 2
+            </Link>
+          </li>
         </ul>
       </div>
     </nav>
